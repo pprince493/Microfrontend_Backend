@@ -1,0 +1,75 @@
+server:
+  port: 9116
+   
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      routes:
+        - id: POSTAL-SERVICE
+          uri: lb://POSTAL-SERVICE
+          predicates:
+            - Path=/postalServices/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+        - id: otp-service
+          uri: lb://otp-service
+          predicates:
+            - Path=/otpService/api/v1/**
+        - id: LOANOFFER-SERVICE
+          uri: lb://LOANOFFER-SERVICE
+          predicates:
+            - Path=/loanOffersService/api/v1/**
+        - id: CIN-SERVICE
+          uri: lb://CIN-SERVICE
+          predicates:
+            - Path=/CinServices/**
+        - id: GSTIN-SERVICE
+          uri: lb://GSTIN-SERVICE
+          predicates:
+            - Path=/GSTINServices/**
+        - id: WATERMARK-SERVICE
+          uri: lb://WATERMARK-SERVICE
+          predicates:
+            - Path=/watermarkService/**
+        - id: PRODUCT-SERVICE
+          uri: lb://PRODUCT-SERVICE
+          predicates:
+            - Path=/productServices/**
+        - id: KYC-SERVICE
+          uri: lb://KYC-SERVICE
+          predicates:
+            - Path=/kycServices/**
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+            allowedOrigins: 'http://13.235.177.48:3000'
+            allowedHeaders:
+              - Content-Type
+              - Authorization
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - PATCH
+ 
+      
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URI:http://13.235.177.48:8761/eureka}
+  instance:
+    prefer-ip-address: true
+    hostname: 13.235.177.48
+      

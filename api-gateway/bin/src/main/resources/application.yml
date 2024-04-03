@@ -1,0 +1,36 @@
+server:
+  port: 9116
+   
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    gateway:
+      routes:
+        - id: POSTAL-SERVICE
+          uri: lb://POSTAL-SERVICE
+          predicates:
+            - Path=/postalServices/**
+        - id: USER-SERVICE
+          uri: lb://USER-SERVICE
+          predicates:
+            - Path=/user-service/**
+        - id: otp-service
+          uri: lb://otp-service
+          predicates:
+            - Path=/otpService/api/v1/**
+ 
+      
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    prefer-ip-address: true
+    hostname: localhost
+      
